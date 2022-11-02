@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.pram.bookcompose.data.BookModel
 import com.pram.bookcompose.presentation.common.observeAsState
 import com.pram.bookcompose.ui.theme.Purple500
@@ -32,7 +33,8 @@ import com.pram.bookcompose.ui.theme.Teal200
 
 @Composable
 fun BookListScreen(
-    bookListViewModel: BookListViewModel = viewModel()
+    bookListViewModel: BookListViewModel = viewModel(),
+    navController: NavController
 ) {
 
     val books = bookListViewModel.books.value
@@ -49,10 +51,10 @@ fun BookListScreen(
     BookListScreen(
         books = books,
         onBookClick = { clickedBook ->
-            bookListViewModel.performSelectBook(clickedBook)
+            navController.navigate("bookDetail/${clickedBook.id}")
+//            navController.navigate("bookDetail/")
         },
         onAddBookClick = {
-            bookListViewModel.performAddBook()
         }
     )
 }
