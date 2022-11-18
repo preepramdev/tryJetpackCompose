@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.pram.bookcompose.data.BookModel
 import com.pram.bookcompose.presentation.common.observeAsState
+import com.pram.bookcompose.presentation.widget.dialog.OneButtonDialog
 import com.pram.bookcompose.ui.theme.Teal200
 
 @Composable
@@ -77,23 +78,24 @@ fun BookDetailScreen(
                 }
             }
             if (showErrorSomethingWrong) {
-                AlertDialog(
-                    onDismissRequest = { },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            onErrorDialog.invoke()
-                        })
-                        { Text(text = "OK") }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            onErrorDialog.invoke()
-                        })
-                        { Text(text = "Cancel") }
-                    },
-                    title = { Text(text = "Please confirm") },
-                    text = { Text(text = "Should I continue with the requested action?") }
-                )
+                OneButtonDialog({})
+//                AlertDialog(
+//                    onDismissRequest = { },
+//                    confirmButton = {
+//                        TextButton(onClick = {
+//                            onErrorDialog.invoke()
+//                        })
+//                        { Text(text = "OK") }
+//                    },
+//                    dismissButton = {
+//                        TextButton(onClick = {
+//                            onErrorDialog.invoke()
+//                        })
+//                        { Text(text = "Cancel") }
+//                    },
+//                    title = { Text(text = "Please confirm") },
+//                    text = { Text(text = "Should I continue with the requested action?") }
+//                )
 //                Dialog(onDismissRequest = { /*TODO*/ }, content = Text(text = "fdfd"))
             }
         }
