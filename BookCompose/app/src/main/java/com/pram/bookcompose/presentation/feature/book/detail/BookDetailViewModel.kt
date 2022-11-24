@@ -7,15 +7,26 @@ import com.pram.bookcompose.data.BookModel
 
 class BookDetailViewModel : ViewModel() {
 
+    var isError = true
+
     val book: MutableState<BookModel?> = mutableStateOf(null)
     val showErrorSomethingWrong: MutableState<Boolean> = mutableStateOf(false)
 
-    fun getBook(bookId: String?) {
+//    fun getBook(bookId: String?) {
 //        bookId?.let {
 //            book.value = getMockBook(bookId)
 //        } ?: run {
-            showErrorSomethingWrong.value = true
+//
 //        }
+//    }
+
+    fun showDialog() {
+        showErrorSomethingWrong.value = true
+    }
+
+    fun hideDialog() {
+        isError = false
+        showErrorSomethingWrong.value = false
     }
 
     private fun getMockBook(bookId: String): BookModel {

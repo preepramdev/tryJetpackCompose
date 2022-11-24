@@ -40,12 +40,17 @@ fun BookDetailScreen(
 
     when (lifecycleState.value) {
         Lifecycle.Event.ON_RESUME -> {
-            bookDetailViewModel.getBook(bookId)
+//            bookDetailViewModel.getBook(bookId)
+            bookDetailViewModel.showDialog()
         }
         else -> Unit
     }
 
-    BookDetailScreen(book, showErrorSomethingWrong, {navController.popBackStack()})
+    BookDetailScreen(
+        book,
+        showErrorSomethingWrong,
+        onErrorDialog = { bookDetailViewModel.hideDialog() }
+    )
 }
 
 @Composable
@@ -78,25 +83,9 @@ fun BookDetailScreen(
                 }
             }
             if (showErrorSomethingWrong) {
-                OneButtonDialog({})
-//                AlertDialog(
-//                    onDismissRequest = { },
-//                    confirmButton = {
-//                        TextButton(onClick = {
-//                            onErrorDialog.invoke()
-//                        })
-//                        { Text(text = "OK") }
-//                    },
-//                    dismissButton = {
-//                        TextButton(onClick = {
-//                            onErrorDialog.invoke()
-//                        })
-//                        { Text(text = "Cancel") }
-//                    },
-//                    title = { Text(text = "Please confirm") },
-//                    text = { Text(text = "Should I continue with the requested action?") }
-//                )
-//                Dialog(onDismissRequest = { /*TODO*/ }, content = Text(text = "fdfd"))
+                OneButtonDialog(
+                    onButtonClick = onErrorDialog
+                )
             }
         }
     }
