@@ -4,29 +4,27 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.pram.bookcompose.data.BookModel
+import com.pram.bookcompose.presentation.feature.book.detail.uistate.BookDetailErrorUiState
 
 class BookDetailViewModel : ViewModel() {
 
-    var isError = true
-
     val book: MutableState<BookModel?> = mutableStateOf(null)
-    val showErrorSomethingWrong: MutableState<Boolean> = mutableStateOf(false)
+    val showError: MutableState<BookDetailErrorUiState?> = mutableStateOf(null)
 
-//    fun getBook(bookId: String?) {
-//        bookId?.let {
-//            book.value = getMockBook(bookId)
-//        } ?: run {
-//
-//        }
-//    }
+    fun getBook(bookId: String?) {
+        bookId?.let {
+            book.value = getMockBook(bookId)
+        } ?: run {
+            showError(BookDetailErrorUiState.SomethingWrongError)
+        }
+    }
 
-    fun showDialog() {
-        showErrorSomethingWrong.value = true
+    private fun showError(bookDetailErrorUiState: BookDetailErrorUiState) {
+        showError.value = bookDetailErrorUiState
     }
 
     fun hideDialog() {
-        isError = false
-        showErrorSomethingWrong.value = false
+        showError.value = null
     }
 
     private fun getMockBook(bookId: String): BookModel {

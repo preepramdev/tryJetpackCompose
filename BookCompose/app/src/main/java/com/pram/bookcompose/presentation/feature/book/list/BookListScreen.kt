@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,6 +74,7 @@ fun BookListScreen(
         Box {
             if (books.isNotEmpty()) {
                 LazyColumn(
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 ) {
                     items(
                         items = books,
@@ -97,32 +99,6 @@ fun BookListScreen(
                 }) {
                 Icon(Icons.Filled.Add, "Add")
             }
-        }
-    }
-}
-
-@Composable
-fun BookItemList(
-    book: BookModel,
-    onBookClick: ((BookModel) -> Unit?)? = null
-) {
-    Card(
-        backgroundColor = Teal200,
-        modifier = Modifier
-            .padding(vertical = 4.dp, horizontal = 4.dp)
-            .clickable(true, onClick = {
-                onBookClick?.invoke(book)
-            })
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-        ) {
-            Text(text = "Id: ${book.id}")
-            Text(text = "Title: ${book.title}")
-            Text(text = "Author: ${book.author}")
-            Text(text = "Pages: ${book.pages}")
         }
     }
 }
@@ -158,18 +134,5 @@ fun ScreenPreview() {
         books = mockBooks,
         onBookClick = {},
         onAddBookClick = {}
-    )
-}
-
-@Preview
-@Composable
-fun BookItemListPreview() {
-    BookItemList(
-        book = BookModel(
-            "000",
-            "title",
-            "author",
-            128
-        )
     )
 }

@@ -1,28 +1,31 @@
 package com.pram.bookcompose.presentation.feature.book.detail
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import com.pram.bookcompose.data.BookModel
 import com.pram.bookcompose.presentation.common.observeAsState
+import com.pram.bookcompose.presentation.feature.book.detail.uistate.BookDetailErrorUiState
+import com.pram.bookcompose.presentation.widget.button.NormalButton
+import com.pram.bookcompose.presentation.widget.button.OutlineButton
 import com.pram.bookcompose.presentation.widget.dialog.OneButtonDialog
 import com.pram.bookcompose.ui.theme.Teal200
 
@@ -34,29 +37,27 @@ fun BookDetailScreen(
 ) {
 
     val book = bookDetailViewModel.book.value
-    val showErrorSomethingWrong = bookDetailViewModel.showErrorSomethingWrong.value
+    val bookDetailErrorUiState = bookDetailViewModel.showError.value
 
     val lifecycleState = LocalLifecycleOwner.current.lifecycle.observeAsState()
 
     when (lifecycleState.value) {
         Lifecycle.Event.ON_RESUME -> {
-//            bookDetailViewModel.getBook(bookId)
-            bookDetailViewModel.showDialog()
+            bookDetailViewModel.getBook(bookId)
         }
         else -> Unit
     }
 
     BookDetailScreen(
         book,
-        showErrorSomethingWrong,
-        onErrorDialog = { bookDetailViewModel.hideDialog() }
-    )
+        bookDetailErrorUiState
+    ) { bookDetailViewModel.hideDialog() }
 }
 
 @Composable
 fun BookDetailScreen(
     book: BookModel?,
-    showErrorSomethingWrong: Boolean,
+    bookDetailErrorUiState: BookDetailErrorUiState?,
     onErrorDialog: () -> Unit
 ) {
 
@@ -65,24 +66,44 @@ fun BookDetailScreen(
         color = MaterialTheme.colors.background
     ) {
         Box {
-            Card(
-                backgroundColor = Teal200,
-                modifier = Modifier
-                    .padding(all = 8.dp)
-                    .fillMaxWidth()
-            ) {
-                Column(
+            Column {
+                Card(
+                    backgroundColor = Teal200,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 16.dp)
                         .fillMaxWidth()
                 ) {
-                    Text(text = "Id: ${book?.id.orEmpty()}")
-                    Text(text = "Title: ${book?.title.orEmpty()}")
-                    Text(text = "Author: ${book?.author.orEmpty()}")
-                    Text(text = "Pages: ${book?.pages ?: ""}")
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                    ) {
+                        BookDetailRow(header = "Id", detail = book?.id.orEmpty())
+                        BookDetailRow(header = "Title", detail = book?.title.orEmpty())
+                        BookDetailRow(header = "Author", detail = book?.author.orEmpty())
+                        BookDetailRow(header = "Pages", detail = "${book?.pages ?: ""}")
+                    }
+                }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    NormalButton(
+                        text = "Update",
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+
+                    }
+                    OutlineButton(
+                        text = "Remove",
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) {
+
+                    }
                 }
             }
-            if (showErrorSomethingWrong) {
+            if (bookDetailErrorUiState is BookDetailErrorUiState.SomethingWrongError) {
                 OneButtonDialog(
                     onButtonClick = onErrorDialog
                 )
@@ -103,12 +124,12 @@ fun BookDetailScreen(
     name = "480"
 )
 @Composable
-fun dBookDetailScreenPreview() {
+fun BookDetailScreenPreview() {
     val mockBookModel = BookModel(
         id = "0",
         title = "title 0",
         author = "author 0",
         pages = 10
     )
-    BookDetailScreen(mockBookModel, false, {})
+    BookDetailScreen(mockBookModel, null) {}
 }
